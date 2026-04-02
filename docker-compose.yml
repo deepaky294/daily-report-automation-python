@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mtd-report:
+    build: .
+    image: mtd-report:latest
+    container_name: mtd-report-automation
+    
+    # Mount volumes for data persistence
+    volumes:
+      - ./data:/app/data
+      - ./output:/app/output
+      - ./logs:/app/logs
+    
+    # Environment variables
+    environment:
+      LOG_LEVEL: INFO
+      MASTER_REPORT_FILE: Master Report.xlsx
+      RETAILER_MAPPING_FILE: retailer_rm_mapping.csv
+      BEAT_PLAN_FILE: new_beat_plan.csv
+    
+    # Don't restart automatically (triggered by scheduler)
+    restart: "no"
+    
+    # Resource limits for production
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
